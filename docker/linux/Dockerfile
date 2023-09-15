@@ -1,10 +1,25 @@
 # sys_image can be overridden from the CLI
-ARG sys_image=debian:stable
+ARG sys_image=debian:10
 
 FROM $sys_image
 
 # vendor can be overridden from the CLI
 ARG vendor=debian
+
+#RUN apt-get update -qq
+#RUN apt-get install -y python-is-python3 pkg-config build-essential
+
+#RUN apt-get update
+#RUN apt-get upgrade
+#RUN apt install -y python-is-python3
+
+
+#RUN apt-get update && apt-get install -y python3
+#RUN ln -s /usr/bin/python3 /usr/bin/python
+#RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+
+
+
 
 RUN mkdir -p /temp/docker/shared/
 WORKDIR /temp/docker/shared/
@@ -13,6 +28,7 @@ WORKDIR /temp/docker/shared/
 # this helps when changing commands only in a single script,
 # since it will not requrie rebuilding all docker image layers
 # but just the ones that were affected
+
 
 COPY ./shared/install.${vendor}.packages.sh /temp/docker/shared
 RUN ./install.${vendor}.packages.sh
