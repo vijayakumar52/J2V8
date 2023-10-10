@@ -23,7 +23,7 @@ RUN apt-get -qq update && \
     g++-8-arm-linux-gnueabihf \
     gcc-arm-linux-gnueabihf
 
-RUN apt-get update && apt-get upgrade
+RUN apt-get -y update && apt-get -y upgrade
 RUN apt install -y pkg-config
 RUN mkdir -p /v8build
 WORKDIR /v8build
@@ -43,6 +43,8 @@ WORKDIR /v8build
 #RUN echo "target_os= ['${target_os}']" >> .gclient
 #RUN gclient sync
 
+RUN apt-get install -y procps
+
 RUN git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git \
     && export PATH="/v8build/depot_tools:$PATH" \
     && echo $PATH \
@@ -50,7 +52,7 @@ RUN git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git \
     && cd /v8build/v8 \
     && git checkout 9.3.345.11 \
     && cd /v8build \
-    && echo "target_os= ['${target_os}']" >> .gclient \
+    && echo "target_os= ['linux']" >> .gclient \
     && gclient sync
 
 
@@ -71,6 +73,20 @@ RUN cp -av lib/x86_64-linux-gnu/* /lib/x86_64-linux-gnu/
 RUN DEBIAN_FRONTEND=noninteractive apt -y --fix-broken install
 
 RUN apt install ninja-build
+
+RUN apt-get install -y build-essential checkinstall
+RUN apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev \
+    libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev
+RUN wget https://www.python.org/ftp/python/3.8.12/Python-3.8.12.tgz
+RUN tar xzf Python-3.8.12.tgz
+RUN cd Python-3.8.12 && ./configure --enable-optimizations && make altinstall
+
+
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.7 1
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.8 2
+
+RUN update-alternatives --set python3 /usr/local/bin/python3.8
+
 RUN apt install -y python-is-python3
 RUN python --version
 
