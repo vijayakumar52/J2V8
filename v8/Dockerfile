@@ -43,6 +43,7 @@ WORKDIR /v8build
 #RUN echo "target_os= ['${target_os}']" >> .gclient
 #RUN gclient sync
 
+
 RUN apt-get install -y procps
 
 RUN git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git \
@@ -50,9 +51,9 @@ RUN git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git \
     && echo $PATH \
     && fetch v8 \
     && cd /v8build/v8 \
-    && git checkout 9.3.345.11 \
+    && git checkout 12.2.281.28 \
     && cd /v8build \
-    && echo "target_os= ['linux']" >> .gclient \
+    && echo "target_os= ['${target_os}']" >> .gclient \
     && gclient sync
 
 
@@ -68,14 +69,14 @@ RUN echo y | sh install-deps.sh
 
 RUN cd /tmp
 RUN apt -y download libcrypt1
-RUN dpkg-deb -x libcrypt1_1%3a4.4.36-2_amd64.deb  .
-RUN cp -av lib/x86_64-linux-gnu/* /lib/x86_64-linux-gnu/
+RUN dpkg-deb -x libcrypt1_1%3a4.4.36-4_amd64.deb  .
+RUN cp -av usr/lib/x86_64-linux-gnu/* /usr/lib/x86_64-linux-gnu/
 RUN DEBIAN_FRONTEND=noninteractive apt -y --fix-broken install
 
-RUN apt install ninja-build
+RUN apt install -y ninja-build
 
 RUN apt-get install -y build-essential checkinstall
-RUN apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev \
+RUN apt-get install -y libreadline-gplv2-dev libssl-dev \
     libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev libffi-dev zlib1g-dev
 RUN wget https://www.python.org/ftp/python/3.8.12/Python-3.8.12.tgz
 RUN tar xzf Python-3.8.12.tgz
@@ -95,7 +96,7 @@ RUN python --version
 #    && cp -av lib/x86_64-linux-gnu/* /lib/x86_64-linux-gnu/ \
 #    && apt -y --fix-broken install
 
- 
+RUN apt install -y gcc-multilib 
 
 ENV target_cpu ${target_cpu}
 ENV build_platform ${target_cpu}.release

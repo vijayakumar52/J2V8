@@ -1,4 +1,4 @@
-ARG sys_image=debian:jessie-slim
+ARG sys_image=debian:10
 
 FROM $sys_image
 
