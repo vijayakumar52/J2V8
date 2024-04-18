@@ -21,12 +21,13 @@
 
 #define TAG "J2V8_V8Impl"
 
+/*
 #pragma comment(lib, "userenv.lib")
 #pragma comment(lib, "IPHLPAPI.lib")
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "WINMM.lib")
 #pragma comment( lib, "psapi.lib" )
-
+*/
 using namespace std;
 using namespace v8;
 
